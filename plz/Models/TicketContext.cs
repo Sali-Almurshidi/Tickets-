@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using plz.Models;
 
-namespace plz.Controllers
+namespace plz.Models
 {
     public class TicketContext:DbContext
     {
+        //ctor
         public TicketContext(DbContextOptions<TicketContext> options):base (options)
         {
         }

@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using plz.Controllers;
+using plz.Models;
+using AutoMapper;
 
 namespace plz
 {
@@ -26,7 +28,16 @@ namespace plz
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<TicketContext>(options=> 
+
+
+            services.AddAutoMapper(typeof(Startup));
+
+            // to connection with Ticket table
+            services.AddDbContext<TicketContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DevConnections")));
+
+            // to connection with user table
+            services.AddDbContext<UserContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DevConnections")));
         }
 
