@@ -27,25 +27,25 @@ namespace plz.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Register(RegisterViewModel RegisterModel)
-        {
-            return View();
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Index(RegisterViewModel RegisterModel)
+        // {return View(); }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel userModel)
+        public async Task<IActionResult> Index(RegisterViewModel RegisterModel)
         {
             if (!ModelState.IsValid)
             {
-                return View(userModel);
+                return View(RegisterModel);
             }
 
-            var user = _mapper.Map<User>(userModel);
+            var user = _mapper.Map<User>(RegisterModel);
 
-            var result = await _userManager.CreateAsync(user, userModel.Password);
+            var result = await _userManager.CreateAsync(user, RegisterModel.Password);
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
@@ -53,12 +53,15 @@ namespace plz.Controllers
                     ModelState.TryAddModelError(error.Code, error.Description);
                 }
 
-                return View(userModel);
+                return View(RegisterModel);
             }
 
             await _userManager.AddToRoleAsync(user, "Visitor");
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
+
+
+
     }
 }

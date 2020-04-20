@@ -19,6 +19,7 @@ namespace plz.Models
 
         [Required(ErrorMessage = "Required")]
         [DisplayName("Email : ")]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Required")]

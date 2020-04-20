@@ -12,6 +12,9 @@ using Microsoft.Extensions.Hosting;
 using plz.Controllers;
 using plz.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace plz
 {
@@ -32,6 +35,8 @@ namespace plz
 
             services.AddAutoMapper(typeof(Startup));
 
+
+
             // to connection with Ticket table
             services.AddDbContext<TicketContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DevConnections")));
@@ -39,6 +44,33 @@ namespace plz
             // to connection with user table
             services.AddDbContext<UserContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DevConnections")));
+
+            services.AddDefaultIdentity<IdentityUser>(
+                options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<UserContext>();
+
+            services.AddControllers(config =>
+            {
+                // using Microsoft.AspNetCore.Mvc.Authorization;
+                // using Microsoft.AspNetCore.Authorization;
+                var policy = new AuthorizationPolicyBuilder()
+                                 .RequireAuthenticatedUser()
+                                 .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            });
+
+            //services.AddIdentity<User, IdentityRole>(options =>
+            //{
+            //options.User.RequireUniqueEmail = false;
+            //options.Password.RequiredLength = 7;
+            //options.Password.RequireDigit = false;
+            // options.Password.RequireUppercase = false;
+            //   options.User.RequireUniqueEmail = true;
+            // }).AddEntityFrameworkStores<UserContext>();
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
